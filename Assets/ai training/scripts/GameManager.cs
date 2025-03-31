@@ -26,8 +26,6 @@ public class GameManager : MonoBehaviour
     {
         // Update the round timer
         timer -= Time.deltaTime;
-
-        Debug.Log("caught : " + caught);
         // If the timer reaches zero, end the round
         if (timer <= 0)
         {

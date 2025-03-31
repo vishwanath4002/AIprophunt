@@ -76,6 +76,9 @@ public class HiderAI : Agent
         // 5. Current form index
         currentFormIndex = hiderController.GetCurrentFormIndex();
         sensor.AddObservation(currentFormIndex);
+
+        // 6. Angular velocity 
+        sensor.AddObservation(hiderController.GetAngularVelocity());
     }
 
     public override void OnActionReceived(ActionBuffers actions)

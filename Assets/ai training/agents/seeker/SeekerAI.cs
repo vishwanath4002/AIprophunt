@@ -80,7 +80,7 @@ public class SeekerAI : MonoBehaviour
         foreach (var obj in detectedObjects)
         {
             // Detect the hider in its original form or if a props velocity 
-            if (obj.tag == hiderTag || obj.velocity > 0f)
+            if (obj.tag == hiderTag || obj.velocity > 0f || obj.angularVelocity > 0f)
             {
                 hider = obj;
                 break;

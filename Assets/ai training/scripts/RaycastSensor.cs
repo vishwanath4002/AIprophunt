@@ -42,7 +42,8 @@ public class RaycastSensor : MonoBehaviour
                         tag = hit.collider.tag,
                         position = hit.collider.transform.position,
                         distance = hit.distance,
-                        velocity = (rb != null && !rb.isKinematic) ? rb.velocity.magnitude : (hider != null) ? hider.GetVelocity().magnitude : 0f
+                        velocity = (rb != null && !rb.isKinematic) ? rb.velocity.magnitude : (hider != null) ? hider.GetVelocity().magnitude : 0f,
+                        angularVelocity = (hit.collider.tag != "seeker") ? (hider == null) ? 0f : hider.GetAngularVelocity().magnitude : 0f
                     });
 
                     Debug.DrawRay(transform.position, direction * hit.distance, Color.red);

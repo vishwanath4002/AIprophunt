@@ -56,7 +56,6 @@ public class HiderController : MonoBehaviour
         // Store current rotation for next frame
         lastRotation = transform.rotation;
 
-        Debug.Log(GetAngularVelocity().sqrMagnitude);
     }
 
     public void Move(float direction)
