@@ -23,10 +23,14 @@ public class HiderController : MonoBehaviour
     private Vector3 previousPosition;
     private Vector3 velocity;
 
+    private Quaternion lastRotation;
+    public Vector3 angularVelocity;
+
     void Start()
     {
+        lastRotation = transform.rotation;
         // Store all child objects (forms)
-        int childCount = transform.childCount - 1;
+        int childCount = transform.childCount - 2;
         formObjects = new Transform[childCount];
         for (int i = 0; i < childCount; i++)
         {
@@ -41,6 +45,18 @@ public class HiderController : MonoBehaviour
         // Calculate velocity manually
         velocity = (transform.position - previousPosition) / Time.deltaTime;
         previousPosition = transform.position;
+
+        // Calculate the difference in rotation
+        Quaternion deltaRotation = transform.rotation * Quaternion.Inverse(lastRotation);
+
+        // Convert to angular velocity (radians per second)
+        deltaRotation.ToAngleAxis(out float angle, out Vector3 axis);
+        angularVelocity = (axis * angle * Mathf.Deg2Rad) / Time.deltaTime;
+
+        // Store current rotation for next frame
+        lastRotation = transform.rotation;
+
+        Debug.Log(GetAngularVelocity().sqrMagnitude);
     }
 
     public void Move(float direction)
@@ -109,5 +125,10 @@ public class HiderController : MonoBehaviour
     public Vector3 GetVelocity()
     {
         return velocity;
+    }
+
+    public Vector3 GetAngularVelocity()
+    {
+        return angularVelocity;
     }
 }
