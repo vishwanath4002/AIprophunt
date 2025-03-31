@@ -12,10 +12,10 @@ GameObject:
   - component: {fileID: 7867508571470668147}
   - component: {fileID: 4473068628623908234}
   - component: {fileID: 1867229806296166144}
-  - component: {fileID: 7386271502040608747}
+  - component: {fileID: 4110842405062650730}
   m_Layer: 0
   m_Name: Garbage Bin
-  m_TagString: Untagged
+  m_TagString: garbage bin
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -106,7 +106,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.55402607, y: 1.0594714, z: 0.5540262}
   m_Center: {x: 0, y: 0.5310923, z: 0.000000029802322}
---- !u!54 &7386271502040608747
+--- !u!54 &4110842405062650730
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -129,7 +129,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
