@@ -3694,7 +3694,7 @@ GameObject:
   - component: {fileID: 1403597221}
   m_Layer: 0
   m_Name: Raycaster
-  m_TagString: raycastsensor
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3918,7 +3918,7 @@ MonoBehaviour:
     hasUpgradedBrainParametersWithActionSpec: 1
   m_Model: {fileID: 0}
   m_InferenceDevice: 1
-  m_BehaviorType: 0
+  m_BehaviorType: 1
   m_BehaviorName: HiderAI
   TeamId: 0
   m_UseChildSensors: 1
@@ -3991,6 +3991,7 @@ MonoBehaviour:
   currentFormIndex: 0
   transformCooldown: 5
   transformDuration: 10
+  angularVelocity: {x: 0, y: 0, z: 0}
 --- !u!114 &1435509357
 MonoBehaviour:
   m_ObjectHideFlags: 0
