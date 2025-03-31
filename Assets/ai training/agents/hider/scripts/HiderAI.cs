@@ -16,34 +16,16 @@ public class HiderAI : Agent
 
     [Header("Debug Info")]
     [SerializeField] private int currentFormIndex; // To track current form in Inspector
-    [SerializeField] private bool debugMode = true; // Enable keyboard control for testing
+    private float seekerDistance;
 
-    private void Update()
+    public override void OnEpisodeBegin()
     {
-        if (!debugMode) return;
-
-        // Movement (W = forward, S = stop)
-        float move = Input.GetKey(KeyCode.W) ? 1f : 0f;
-
-        // Turning (A = left, D = right)
-        float turn = Input.GetKey(KeyCode.A) ? -1f : Input.GetKey(KeyCode.D) ? 1f : 0f;
-
-        // Transform using number keys (1 = original, 2, 3, etc. for props)
-        int transformIndex = -1;
-        for (int i = 0; i < 9; i++) // Supports up to 9 transformations
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha1 + i))
-            {
-                transformIndex = i;
-                break;
-            }
-        }
-
-        // Apply actions
-        hiderController.Move(move);
-        hiderController.Turn(turn);
-        if (transformIndex >= 0) hiderController.TransformHider(transformIndex);
+        Reset();
+        SetReward(0);
+        seekerDistance = raycastSensor.GetSeekerDistance();
     }
+
+
     public override void CollectObservations(VectorSensor sensor)
     {
         // 1. Transformation duration remaining (continuous)
@@ -101,8 +83,53 @@ public class HiderAI : Agent
         float turn = actions.DiscreteActions[1] == 1 ? 1f : actions.DiscreteActions[1] == 2 ? -1f : 0f;
         int transformIndex = actions.DiscreteActions[2];
 
+        // Move and transform
         hiderController.Move(move);
         hiderController.Turn(turn);
         hiderController.TransformHider(transformIndex);
+
+        float previousSeekerDistance = seekerDistance;
+        seekerDistance = raycastSensor.GetSeekerDistance();
+
+        //  Reward survival
+        AddReward(0.01f); // Small positive reward per step
+
+        //  Reward transformation if it helps
+        if (transformIndex != currentFormIndex)
+        {
+            if (seekerDistance > previousSeekerDistance) // If transformation helps avoid seeker
+            {
+                AddReward(0.5f);
+            }
+            else
+            {
+                AddReward(-0.1f); // Penalize unnecessary transformations
+            }
+        }
+
+        //  Penalize being caught
+        if (seekerDistance < 0.5f) // Adjust based on seeker detection range
+        {
+            SetReward(-1.0f);
+            EndEpisode(); // Restart training
+        }
+
+        currentFormIndex = transformIndex; // Update current form
+    }
+
+
+    public override void Heuristic(in ActionBuffers actionsOut)
+    {
+        var discreteActions = actionsOut.DiscreteActions;
+        discreteActions[0] = Input.GetKey(KeyCode.W) ? 1 : 0; // Move forward
+        discreteActions[1] = Input.GetKey(KeyCode.A) ? 2 : (Input.GetKey(KeyCode.D) ? 1 : 0); // Turn left/right
+        discreteActions[2] = Input.GetKey(KeyCode.Alpha1) ? 1 : Input.GetKey(KeyCode.Alpha2) ? 2 : Input.GetKey(KeyCode.Alpha3) ? 3 : Input.GetKey(KeyCode.Alpha4) ? 4 : Input.GetKey(KeyCode.Alpha5) ? 5 : Input.GetKey(KeyCode.Alpha6) ? 6 : Input.GetKey(KeyCode.Alpha0) ? 0 : 0;
+    }
+
+    private void Reset()
+    {
+        hiderController.TransformHider(0);
+        transform.position = Vector3.zero; // Reset position (adjust if needed)
+        transform.rotation = Quaternion.identity; // Reset rotation
     }
 }

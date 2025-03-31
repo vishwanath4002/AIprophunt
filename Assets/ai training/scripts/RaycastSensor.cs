@@ -55,4 +55,21 @@ public class RaycastSensor : MonoBehaviour
 
         return detectedObjects;
     }
+
+    public float GetSeekerDistance()
+    {
+        List<RaycastHitData> detectedObjects = CastRays();
+        float seekerDistance = float.MaxValue;
+
+        foreach (var hit in detectedObjects)
+        {
+            if (hit.tag == "seeker") // Check if it's the Seeker
+            {
+                seekerDistance = hit.distance; // Store the distance
+                break; // No need to check further
+            }
+        }
+
+        return seekerDistance == float.MaxValue ? raycastLength : seekerDistance;
+    }
 }

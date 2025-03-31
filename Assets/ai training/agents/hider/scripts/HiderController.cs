@@ -5,8 +5,8 @@ using UnityEngine.AI;
 public class HiderController : MonoBehaviour
 {
     [Header("Movement Settings")]
-    public float moveSpeed = 3f;
-    public float rotationSpeed = 120f;
+    [SerializeField] public float moveSpeed = 3f;
+    [SerializeField] public float rotationSpeed = 120f;
 
     [Header("Transformation Settings")]
     [SerializeField] private int currentFormIndex = 0; // Tracks the current form
@@ -24,7 +24,7 @@ public class HiderController : MonoBehaviour
     {
 
         // Store all child objects (forms)
-        int childCount = transform.childCount;
+        int childCount = transform.childCount - 1;
         formObjects = new Transform[childCount];
         for (int i = 0; i < childCount; i++)
         {

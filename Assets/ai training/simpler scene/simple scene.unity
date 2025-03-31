@@ -3501,7 +3501,7 @@ GameObject:
   - component: {fileID: 1403597221}
   m_Layer: 0
   m_Name: Raycaster
-  m_TagString: Untagged
+  m_TagString: raycastsensor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3533,13 +3533,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fb37b22c53d118499f3341bdc5f6bd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  raycastAngle: 90
-  raysPerAngle: 10
-  raycastLength: 10
+  raycastAngle: 140
+  raysPerAngle: 15
+  raycastLength: 20
   detectionLayer:
     serializedVersion: 2
-    m_Bits: 0
-  detectableTags: []
+    m_Bits: 4294967295
+  detectableTags:
+  - cart
+  - crate short
+  - crate long
+  - garbage bin
+  - fire extinguisher
+  - barrel
+  - seeker
 --- !u!1 &1409987979
 GameObject:
   m_ObjectHideFlags: 0
@@ -3705,7 +3712,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 18
+    VectorObservationSize: 16
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 0
