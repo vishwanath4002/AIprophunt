@@ -2122,7 +2122,7 @@ GameObject:
   - component: {fileID: 799747171}
   m_Layer: 0
   m_Name: Seeker
-  m_TagString: seeker
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2208,6 +2208,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 799747170}
   raycastSensor: {fileID: 1749597469}
+  gameManager: {fileID: 1691238714}
   rotateSpeed: 180
   chaseSpeed: 5
   patrolSpeed: 2
@@ -3941,6 +3942,7 @@ MonoBehaviour:
   MaxStep: 0
   hiderController: {fileID: 1435509356}
   raycastSensor: {fileID: 1403597221}
+  gameManager: {fileID: 1691238714}
   detectablePropTags:
   - cart
   - crate short
@@ -3950,7 +3952,6 @@ MonoBehaviour:
   - barrel
   seekerTag: seeker
   currentFormIndex: 0
-  caught: 0
 --- !u!195 &1435509355
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -4583,6 +4584,7 @@ MonoBehaviour:
   - {fileID: 374964092}
   roundDuration: 20
   timer: 0
+  caught: 0
 --- !u!1001 &1695734193
 PrefabInstance:
   m_ObjectHideFlags: 0
