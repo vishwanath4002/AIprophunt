@@ -3,134 +3,106 @@ using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Sensors;
 using Unity.MLAgents.Actuators;
-using UnityEngine.AI;
 
 public class HiderAI : Agent
 {
     [Header("References")]
-    public NavMeshAgent agent;
-    public RaycastSensor raycastSensor;
+    [SerializeField] private HiderController hiderController;
+    [SerializeField] private RaycastSensor raycastSensor;
 
-    [Header("Transformation Settings")]
-    public GameObject[] propForms; // Child objects representing different props
-    private int currentFormIndex = 0; // Index of the active prop
-    public float transformCooldown = 5f; // Cooldown before transforming again
-    private float transformTimer = 0f;
-    private float transformDuration = 10f; // Time the Hider stays transformed
-    private float transformDurationTimer = 0f;
-    private bool isTransformed = false;
+    [Header("Tags & Detection Settings")]
+    [SerializeField] private List<string> detectablePropTags;
+    [SerializeField] private string seekerTag;
 
-    [Header("Movement Settings")]
-    public float moveSpeed = 3.5f;
-    public float rotationSpeed = 180f;
+    [Header("Debug Info")]
+    [SerializeField] private int currentFormIndex; // To track current form in Inspector
+    [SerializeField] private bool debugMode = true; // Enable keyboard control for testing
 
-    void Start()
+    private void Update()
     {
-        agent.speed = moveSpeed;
-        EnableForm(0); // Start in original form
-    }
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) EnableForm(0); // Original form
-        if (Input.GetKeyDown(KeyCode.Alpha2)) EnableForm(1); // First prop
-        if (Input.GetKeyDown(KeyCode.Alpha3)) EnableForm(2); // Second prop
-    }
-    public override void OnEpisodeBegin()
-    {
-        transformTimer = 0f;
-        transformDurationTimer = 0f;
-        isTransformed = false;
-        EnableForm(0);
-    }
+        if (!debugMode) return;
 
+        // Movement (W = forward, S = stop)
+        float move = Input.GetKey(KeyCode.W) ? 1f : 0f;
+
+        // Turning (A = left, D = right)
+        float turn = Input.GetKey(KeyCode.A) ? -1f : Input.GetKey(KeyCode.D) ? 1f : 0f;
+
+        // Transform using number keys (1 = original, 2, 3, etc. for props)
+        int transformIndex = -1;
+        for (int i = 0; i < 9; i++) // Supports up to 9 transformations
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1 + i))
+            {
+                transformIndex = i;
+                break;
+            }
+        }
+
+        // Apply actions
+        hiderController.Move(move);
+        hiderController.Turn(turn);
+        if (transformIndex >= 0) hiderController.TransformHider(transformIndex);
+    }
     public override void CollectObservations(VectorSensor sensor)
     {
-        // Continuous: Time left before transformation expires
-        sensor.AddObservation(transformDurationTimer / transformDuration);
+        // 1. Transformation duration remaining (continuous)
+        sensor.AddObservation(hiderController.GetCurrentTransformationDurationRemaining());
 
-        // Continuous: Time left before it can transform again
-        sensor.AddObservation(transformTimer / transformCooldown);
+        // 2. Transformation cooldown remaining (continuous)
+        sensor.AddObservation(hiderController.GetTransformCooldownRemaining());
 
-        // Discrete: Current prop type index
-        sensor.AddObservation(currentFormIndex);
-
-        // Discrete Array: Count of props of each type in view
+        // 3. Prop count per type in view (discrete array)
         List<RaycastSensor.RaycastHitData> detectedObjects = raycastSensor.CastRays();
-        Dictionary<string, int> propCounts = new Dictionary<string, int>();
+        Dictionary<string, int> propTypeCount = new Dictionary<string, int>();
+        Dictionary<string, float> minDistances = new Dictionary<string, float>();
 
-        foreach (var obj in detectedObjects)
+        foreach (var propTag in detectablePropTags)
         {
-            if (!propCounts.ContainsKey(obj.tag))
-                propCounts[obj.tag] = 0;
-            propCounts[obj.tag]++;
+            propTypeCount[propTag] = 0;
+            minDistances[propTag] = float.MaxValue;
         }
 
-        foreach (var propType in propForms)
-        {
-            int count = propCounts.ContainsKey(propType.tag) ? propCounts[propType.tag] : 0;
-            sensor.AddObservation(count);
-        }
+        float seekerDistance = float.MaxValue;
 
-        // Discrete Array: Discretized minimum distance from each prop type
-        foreach (var propType in propForms)
+        foreach (var hit in detectedObjects)
         {
-            float minDist = float.MaxValue;
-            foreach (var obj in detectedObjects)
+            if (hit.tag == seekerTag)
             {
-                if (obj.tag == propType.tag)
-                    minDist = Mathf.Min(minDist, obj.distance);
+                seekerDistance = hit.distance;
             }
-            sensor.AddObservation(minDist / raycastSensor.raycastLength);
+            else if (detectablePropTags.Contains(hit.tag))
+            {
+                propTypeCount[hit.tag]++;
+                if (hit.distance < minDistances[hit.tag])
+                {
+                    minDistances[hit.tag] = hit.distance;
+                }
+            }
         }
+
+        foreach (var propTag in detectablePropTags)
+        {
+            sensor.AddObservation(propTypeCount[propTag]);
+            sensor.AddObservation(minDistances[propTag] == float.MaxValue ? raycastSensor.raycastLength : minDistances[propTag]);
+        }
+
+        // 4. Seeker distance (discrete)
+        sensor.AddObservation(seekerDistance == float.MaxValue ? raycastSensor.raycastLength : seekerDistance);
+
+        // 5. Current form index
+        currentFormIndex = hiderController.GetCurrentFormIndex();
+        sensor.AddObservation(currentFormIndex);
     }
 
     public override void OnActionReceived(ActionBuffers actions)
     {
-        // Move forward or not
-        if (actions.DiscreteActions[0] == 1)
-            agent.Move(transform.forward * moveSpeed * Time.deltaTime);
+        float move = actions.DiscreteActions[0] == 1 ? 1f : 0f;
+        float turn = actions.DiscreteActions[1] == 1 ? 1f : actions.DiscreteActions[1] == 2 ? -1f : 0f;
+        int transformIndex = actions.DiscreteActions[2];
 
-        // Turn left/right
-        if (actions.DiscreteActions[1] == 1)
-            transform.Rotate(Vector3.up, -rotationSpeed * Time.deltaTime);
-        else if (actions.DiscreteActions[1] == 2)
-            transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
-
-        // Transformation action
-        int transformAction = actions.DiscreteActions[2];
-
-        if (transformAction != currentFormIndex && transformTimer <= 0f)
-        {
-            EnableForm(transformAction);
-            transformTimer = transformCooldown;
-            transformDurationTimer = transformDuration;
-            isTransformed = transformAction != 0;
-        }
-
-        // Handle transformation duration countdown
-        if (isTransformed)
-        {
-            transformDurationTimer -= Time.deltaTime;
-            if (transformDurationTimer <= 0f)
-            {
-                EnableForm(0); // Revert to original form
-                isTransformed = false;
-            }
-        }
-
-        // Handle transformation cooldown countdown
-        if (transformTimer > 0f)
-        {
-            transformTimer -= Time.deltaTime;
-        }
-    }
-
-    private void EnableForm(int index)
-    {
-        for (int i = 0; i < propForms.Length; i++)
-        {
-            propForms[i].SetActive(i == index);
-        }
-        currentFormIndex = index;
+        hiderController.Move(move);
+        hiderController.Turn(turn);
+        hiderController.TransformHider(transformIndex);
     }
 }

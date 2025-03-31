@@ -34,13 +34,14 @@ public class RaycastSensor : MonoBehaviour
                 if (detectableTags.Contains(hit.collider.tag)) // Check if the object has a valid tag
                 {
                     Rigidbody rb = hit.collider.GetComponent<Rigidbody>();
+                    HiderController hider = hit.collider.GetComponentInParent<HiderController>();
 
                     detectedObjects.Add(new RaycastHitData
                     {
                         tag = hit.collider.tag,
                         position = hit.collider.transform.position,
                         distance = hit.distance,
-                        velocity = rb.velocity.magnitude
+                        velocity = (rb != null && !rb.isKinematic) ? rb.velocity.magnitude :(hider != null) ? hider.GetVelocity().magnitude : 0f
                     });
 
                     Debug.DrawRay(transform.position, direction * hit.distance, Color.red);

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -85,8 +86,42 @@ public class SeekerAI : MonoBehaviour
                 break;
             }
         }
+        //if (hider == null)
+        //{
+        //    hider = FindOutlierProp(detectedObjects);
+        //}
+
 
         return hider;
+    }
+
+    private RaycastSensor.RaycastHitData? FindOutlierProp(List<RaycastSensor.RaycastHitData> detectedObjects)
+    {
+        if (detectedObjects.Count == 0) return null;
+
+        // Compute the average position of all props
+        Vector3 averagePosition = Vector3.zero;
+        foreach (var obj in detectedObjects)
+        {
+            averagePosition += obj.position;
+        }
+        averagePosition /= detectedObjects.Count;
+
+        // Find the prop that is the farthest from the average position
+        RaycastSensor.RaycastHitData? outlier = null;
+        float maxDistance = 0f;
+
+        foreach (var obj in detectedObjects)
+        {
+            float distanceFromAverage = Vector3.Distance(obj.position, averagePosition);
+            if (distanceFromAverage > maxDistance)
+            {
+                maxDistance = distanceFromAverage;
+                outlier = obj;
+            }
+        }
+
+        return outlier;
     }
 
     private bool CheckAgentReachedDestination()
