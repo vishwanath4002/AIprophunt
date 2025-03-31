@@ -9,6 +9,7 @@ public class HiderAI : Agent
     [Header("References")]
     [SerializeField] private HiderController hiderController;
     [SerializeField] private RaycastSensor raycastSensor;
+    [SerializeField] private GameManager gameManager;
 
     [Header("Tags & Detection Settings")]
     [SerializeField] private List<string> detectablePropTags;
@@ -87,6 +88,7 @@ public class HiderAI : Agent
         hiderController.Move(move);
         hiderController.Turn(turn);
         hiderController.TransformHider(transformIndex);
+        currentFormIndex = transformIndex; // Update current form
 
         float previousSeekerDistance = seekerDistance;
         seekerDistance = raycastSensor.GetSeekerDistance();
@@ -95,7 +97,7 @@ public class HiderAI : Agent
         AddReward(0.01f); // Small positive reward per step
 
         //  Reward transformation if it helps
-        if (transformIndex != currentFormIndex)
+        if (transformIndex != 0)
         {
             if (seekerDistance > previousSeekerDistance) // If transformation helps avoid seeker
             {
@@ -108,13 +110,12 @@ public class HiderAI : Agent
         }
 
         //  Penalize being caught
-        if (seekerDistance < 0.5f) // Adjust based on seeker detection range
+        if (gameManager.caught) 
         {
-            SetReward(-1.0f);
+            Debug.Log("caught by seeker");
+            AddReward(-2.0f);
             EndEpisode(); // Restart training
         }
-
-        currentFormIndex = transformIndex; // Update current form
     }
 
 
@@ -129,7 +130,5 @@ public class HiderAI : Agent
     private void Reset()
     {
         hiderController.TransformHider(0);
-        transform.position = Vector3.zero; // Reset position (adjust if needed)
-        transform.rotation = Quaternion.identity; // Reset rotation
     }
 }

@@ -14,6 +14,9 @@ public class HiderController : MonoBehaviour
     [SerializeField] private float transformDuration = 10f; // Time before reverting
     private float lastTransformTime = -Mathf.Infinity;
 
+    [Header("References")]
+
+
     private Transform[] formObjects;
     private Coroutine revertCoroutine;
 
@@ -22,7 +25,6 @@ public class HiderController : MonoBehaviour
 
     void Start()
     {
-
         // Store all child objects (forms)
         int childCount = transform.childCount - 1;
         formObjects = new Transform[childCount];

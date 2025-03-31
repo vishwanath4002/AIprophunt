@@ -10,6 +10,7 @@ public class SeekerAI : MonoBehaviour
     [Header("References")]
     public NavMeshAgent agent;
     public RaycastSensor raycastSensor;
+    public GameManager gameManager;
     
     private string hiderTag = "hider";
 
@@ -28,8 +29,7 @@ public class SeekerAI : MonoBehaviour
     [Header("Telemetry")]
     [SerializeField] private SeekerState currentState = SeekerState.Patrolling;
     [SerializeField] private Vector3? lastSeenPosition = null;
-
-    
+    private bool caught;
 
     private void Awake()
     {
@@ -194,9 +194,14 @@ public class SeekerAI : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.CompareTag(hiderTag))
+        if (collision.transform.parent != null)
         {
-            Debug.Log("Collision Caught");
+            GameObject gameObject = collision.transform.parent.gameObject;
+            if (gameObject.name == "Hider")
+            {
+                gameManager.OnHiderCaught();
+            }
         }
     }
+
 }
