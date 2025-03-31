@@ -3939,7 +3939,7 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 5000
+  MaxStep: 0
   hiderController: {fileID: 1435509356}
   raycastSensor: {fileID: 1403597221}
   gameManager: {fileID: 1691238714}
