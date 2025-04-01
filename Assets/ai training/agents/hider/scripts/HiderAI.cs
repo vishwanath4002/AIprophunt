@@ -132,6 +132,6 @@ public class HiderAI : Agent
 
     private void Reset()
     {
-        hiderController.TransformHider(0);
+        hiderController.ActivateForm(0);
     }
 }

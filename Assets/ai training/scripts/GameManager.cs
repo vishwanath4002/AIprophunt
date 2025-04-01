@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviour
     {
         // Hider was caught -> Reset positions and restart the round
         caught = true;
+        Debug.Log("Hider caught");
         //RestartRound();
     }
 

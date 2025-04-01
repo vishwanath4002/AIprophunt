@@ -89,7 +89,7 @@ public class HiderController : MonoBehaviour
         }
     }
 
-    private void ActivateForm(int formIndex)
+    public void ActivateForm(int formIndex)
     {
         for (int i = 0; i < formObjects.Length; i++)
         {
