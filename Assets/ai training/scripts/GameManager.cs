@@ -29,11 +29,13 @@ public class GameManager : MonoBehaviour
         // If the timer reaches zero, end the round
         if (timer <= 0)
         {
+            Debug.Log("Hider won. Restarting round.");
             hiderAgent.EndEpisode();
             EndRound();
         }
         if (caught)
         {
+            Debug.Log("Seeker won. Restarting round.");
             hiderAgent.AddReward(-2f);
             hiderAgent.EndEpisode();
             EndRound();
@@ -44,12 +46,11 @@ public class GameManager : MonoBehaviour
     {
         // Hider was caught -> Reset positions and restart the round
         caught = true;
-        Debug.Log("Hider caught");
         //RestartRound();
     }
 
     private void RestartRound()
-    { 
+    {
         ResetPositions();
         StartNewRound();
     }
@@ -68,6 +69,7 @@ public class GameManager : MonoBehaviour
 
     private void ResetPositions()
     {
+        seekerAgent.Reset();
         if (spawnPoints.Length < 2)
         {
             Debug.LogError("Not enough spawn points! At least 2 are required.");

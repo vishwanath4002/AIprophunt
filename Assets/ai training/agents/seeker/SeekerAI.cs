@@ -18,6 +18,7 @@ public class SeekerAI : MonoBehaviour
     [SerializeField] private float rotateSpeed = 360f;
     [SerializeField] private float chaseSpeed = 3f;
     [SerializeField] private float patrolSpeed = 2f;
+    [SerializeField] private float distanceForBeingOutlier = 2f;
 
     private float rotationProgress = 0f;
     private float rotationDirection = 1f;
@@ -83,14 +84,13 @@ public class SeekerAI : MonoBehaviour
             if (obj.tag == hiderTag || obj.velocity > 0f || obj.angularVelocity > 0f)
             {
                 hider = obj;
-                break;
+                return hider;
             }
         }
         //if (hider == null)
         //{
         //    hider = FindOutlierProp(detectedObjects);
         //}
-
 
         return hider;
     }
@@ -119,6 +119,10 @@ public class SeekerAI : MonoBehaviour
                 maxDistance = distanceFromAverage;
                 outlier = obj;
             }
+        }
+        if (maxDistance < distanceForBeingOutlier)
+        {
+            outlier = null;
         }
 
         return outlier;
@@ -204,4 +208,9 @@ public class SeekerAI : MonoBehaviour
         }
     }
 
+    public void Reset()
+    {
+        lastSeenPosition = null;
+        currentState = SeekerState.Patrolling;
+    }
 }
