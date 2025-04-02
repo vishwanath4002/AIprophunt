@@ -30,14 +30,14 @@ public class GameManager : MonoBehaviour
         if (timer <= 0)
         {
             Debug.Log("Hider won. Restarting round.");
-            hiderAgent.AddReward(10f);
+            hiderAgent.AddReward(50f);
             hiderAgent.EndEpisode();
             EndRound();
         }
         if (caught)
         {
             Debug.Log("Seeker won. Restarting round.");
-            hiderAgent.AddReward(-2f);
+            hiderAgent.AddReward(-50f);
             hiderAgent.EndEpisode();
             EndRound();
         }
