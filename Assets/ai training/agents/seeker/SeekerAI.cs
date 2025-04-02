@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class SeekerAI : MonoBehaviour
 {
-    private enum SeekerState { Patrolling, LookingAround, Chasing, CheckingLastSeen }
+    private enum SeekerState { Patrolling, LookingAround, Chasing, CheckingLastSeen, CheckingOutlier}
 
     [Header("References")]
     public NavMeshAgent agent;
@@ -30,6 +31,7 @@ public class SeekerAI : MonoBehaviour
     [Header("Telemetry")]
     [SerializeField] private SeekerState currentState = SeekerState.Patrolling;
     [SerializeField] private Vector3? lastSeenPosition = null;
+    [SerializeField] private float outlierDistanceFromProps;
     private bool caught;
 
     private void Awake()
@@ -70,6 +72,10 @@ public class SeekerAI : MonoBehaviour
             case SeekerState.LookingAround:
                 LookAround();
                 break;
+
+            case SeekerState.CheckingOutlier:
+                Chase(hiderObj.Value);
+                break;
         }
     }
 
@@ -87,10 +93,10 @@ public class SeekerAI : MonoBehaviour
                 return hider;
             }
         }
-        //if (hider == null)
-        //{
-        //    hider = FindOutlierProp(detectedObjects);
-        //}
+        if (hider == null && (currentState != SeekerState.CheckingLastSeen && currentState !=SeekerState.Chasing))
+        {
+            hider = FindOutlierProp(detectedObjects);
+        }
 
         return hider;
     }
@@ -123,6 +129,11 @@ public class SeekerAI : MonoBehaviour
         if (maxDistance < distanceForBeingOutlier)
         {
             outlier = null;
+        }
+        else 
+        {
+            outlierDistanceFromProps = maxDistance;
+            currentState = SeekerState.CheckingOutlier;
         }
 
         return outlier;
@@ -204,6 +215,11 @@ public class SeekerAI : MonoBehaviour
             if (gameObject.name == "Hider")
             {
                 gameManager.OnHiderCaught();
+            }
+
+            if (currentState == SeekerState.CheckingOutlier && gameObject.name != "Hider")
+            {
+                currentState = SeekerState.Patrolling;
             }
         }
     }

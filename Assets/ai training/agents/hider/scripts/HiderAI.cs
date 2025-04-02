@@ -9,7 +9,6 @@ public class HiderAI : Agent
     [Header("References")]
     [SerializeField] private HiderController hiderController;
     [SerializeField] private RaycastSensor raycastSensor;
-    [SerializeField] private GameManager gameManager;
 
     [Header("Tags & Detection Settings")]
     [SerializeField] private List<string> detectablePropTags;
@@ -111,20 +110,40 @@ public class HiderAI : Agent
             }
             else
             {
+                if (hiderController.GetAngularVelocity().sqrMagnitude == 0f)
+                {
+                    AddReward(-0.5f);
+                }
+                if (hiderController.GetVelocity().sqrMagnitude == 0f)
+                {
+                    AddReward(-0.5f);
+                }
                 AddReward(-0.1f); // Penalize unnecessary transformations
             }
         }
 
         //  Penalize being caught
-        if (gameManager.caught) 
+        if (hiderController.CheckCaught()) 
         {
             AddReward(-2.0f);
             EndEpisode(); // Restart training
         }
 
-        if (hiderController.GetAngularVelocity().sqrMagnitude > 0f)
+        if (transformIndex !=0 && hiderController.GetAngularVelocity().sqrMagnitude > 0f)
         {
             AddReward(-0.5f);
+        }
+
+        if (transformIndex == 0)
+        {
+            if (hiderController.GetAngularVelocity().sqrMagnitude == 0f)
+            {
+                AddReward(-0.5f);
+            }
+            if (hiderController.GetVelocity().sqrMagnitude == 0f)
+            {
+                AddReward(-0.5f);
+            }
         }
     }
 

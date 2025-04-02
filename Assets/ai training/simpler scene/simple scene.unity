@@ -2212,11 +2212,12 @@ MonoBehaviour:
   rotateSpeed: 180
   chaseSpeed: 5
   patrolSpeed: 2
-  distanceForBeingOutlier: 4
+  distanceForBeingOutlier: 15
   patrolPoints:
   - {fileID: 756979574}
   - {fileID: 1279538686}
   currentState: 0
+  outlierDistanceFromProps: 0
 --- !u!1001 &836111856
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3943,7 +3944,6 @@ MonoBehaviour:
   MaxStep: 3000
   hiderController: {fileID: 1435509356}
   raycastSensor: {fileID: 1403597221}
-  gameManager: {fileID: 1691238714}
   detectablePropTags:
   - cart
   - crate short
@@ -3987,6 +3987,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f53f96a53e2818543b82e4b309183dd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 1691238714}
   moveSpeed: 3
   rotationSpeed: 120
   currentFormIndex: 0
