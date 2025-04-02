@@ -121,9 +121,13 @@ public class HiderAI : Agent
                 AddReward(-0.1f); // Penalize unnecessary transformations
             }
         }
+        else
+        {
+            AddReward(-0.2f);
+        }
 
         //  Penalize being caught
-        if (hiderController.CheckCaught()) 
+        if (hiderController.CheckCaught())
         {
             AddReward(-2.0f);
             EndEpisode(); // Restart training
