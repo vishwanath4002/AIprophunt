@@ -84,7 +84,7 @@ public class HiderController : MonoBehaviour
         {
             ActivateForm(0);
             transformStartTime = -Mathf.Infinity;
-            transformationDurationDebug = 0;
+            transformationDurationDebug = 0f;
             lastTransformEndTime = Time.time;
             return;
         }
@@ -116,7 +116,10 @@ public class HiderController : MonoBehaviour
     private IEnumerator RevertToOriginalAfterDelay()
     {
         yield return new WaitForSeconds(transformDuration);
-        TransformHider(0); // Revert back to original form
+        ActivateForm(0); // Revert back to original form
+        transformationDurationDebug = 0f;
+        transformationCoolDownDebug = transformCooldown;
+        lastTransformEndTime = Time.time;
     }
 
     public float GetTransformCooldownRemaining()

@@ -217,7 +217,7 @@ public class SeekerAI : MonoBehaviour
                 gameManager.OnHiderCaught();
             }
 
-            if (currentState == SeekerState.CheckingOutlier && gameObject.name != "Hider")
+            else if (currentState == SeekerState.CheckingOutlier && gameObject.name != "Hider")
             {
                 currentState = SeekerState.Patrolling;
             }

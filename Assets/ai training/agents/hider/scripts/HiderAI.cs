@@ -29,7 +29,7 @@ public class HiderAI : Agent
     {
         if (hiderController.CheckCaught()) // Continuously check if caught
         {
-            AddReward(-2.0f);  // Penalize for getting caught
+            AddReward(-15.0f);  // Penalize for getting caught
             EndEpisode();       // End training episode
         }
     }
