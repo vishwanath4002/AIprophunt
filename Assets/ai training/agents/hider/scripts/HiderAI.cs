@@ -99,14 +99,14 @@ public class HiderAI : Agent
         seekerDistance = raycastSensor.GetSeekerDistance();
 
         //  Reward survival
-        AddReward(0.05f); // Small positive reward per step
+        AddReward(0.1f); // Small positive reward per step
 
         //  Reward transformation if it helps
         if (transformIndex != 0)
         {
             if (seekerDistance > previousSeekerDistance) // If transformation helps avoid seeker
             {
-                AddReward(0.5f);
+                AddReward(1f);
             }
             else
             {
