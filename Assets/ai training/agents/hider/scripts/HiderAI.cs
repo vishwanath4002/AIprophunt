@@ -25,6 +25,14 @@ public class HiderAI : Agent
         seekerDistance = raycastSensor.GetSeekerDistance();
     }
 
+    private void FixedUpdate()
+    {
+        if (hiderController.CheckCaught()) // Continuously check if caught
+        {
+            AddReward(-2.0f);  // Penalize for getting caught
+            EndEpisode();       // End training episode
+        }
+    }
 
     public override void CollectObservations(VectorSensor sensor)
     {
@@ -127,13 +135,8 @@ public class HiderAI : Agent
         }
 
         //  Penalize being caught
-        if (hiderController.CheckCaught())
-        {
-            AddReward(-2.0f);
-            EndEpisode(); // Restart training
-        }
 
-        if (transformIndex !=0 && hiderController.GetAngularVelocity().sqrMagnitude > 0f)
+        if (transformIndex !=0 && hiderController.GetAngularVelocity().sqrMagnitude > 0f && hiderController.GetVelocity().sqrMagnitude > 0f)
         {
             AddReward(-0.5f);
         }
