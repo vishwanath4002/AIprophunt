@@ -78,7 +78,7 @@ public class HiderController : MonoBehaviour
 
     public void TransformHider(int formIndex)
     {
-        if (transformationCoolDownDebug > 0f || transformationDurationDebug > 0f || formIndex == currentFormIndex)
+        if (GetTransformCooldownRemaining() > 0f || transformationDurationDebug > 0f || formIndex == currentFormIndex)
             return;
         if (formIndex == 0)
         {
@@ -100,7 +100,6 @@ public class HiderController : MonoBehaviour
                 StopCoroutine(revertCoroutine);
 
             revertCoroutine = StartCoroutine(RevertToOriginalAfterDelay());
-            lastTransformEndTime = Time.time;
         }
     }
 
@@ -116,11 +115,15 @@ public class HiderController : MonoBehaviour
     private IEnumerator RevertToOriginalAfterDelay()
     {
         yield return new WaitForSeconds(transformDuration);
+
         ActivateForm(0); // Revert back to original form
+
+        // Ensure cooldown starts **after** reverting
+        lastTransformEndTime = Time.time;
         transformationDurationDebug = 0f;
         transformationCoolDownDebug = transformCooldown;
-        lastTransformEndTime = Time.time;
     }
+
 
     public float GetTransformCooldownRemaining()
     {
