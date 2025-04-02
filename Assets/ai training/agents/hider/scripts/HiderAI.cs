@@ -79,6 +79,9 @@ public class HiderAI : Agent
 
         // 6. Angular velocity 
         sensor.AddObservation(hiderController.GetAngularVelocity());
+
+        // 7. Velocity
+        sensor.AddObservation(hiderController.GetVelocity());
     }
 
     public override void OnActionReceived(ActionBuffers actions)
@@ -115,9 +118,13 @@ public class HiderAI : Agent
         //  Penalize being caught
         if (gameManager.caught) 
         {
-            Debug.Log("caught by seeker");
             AddReward(-2.0f);
             EndEpisode(); // Restart training
+        }
+
+        if (hiderController.GetAngularVelocity().sqrMagnitude > 0f)
+        {
+            AddReward(-0.5f);
         }
     }
 
@@ -133,5 +140,6 @@ public class HiderAI : Agent
     private void Reset()
     {
         hiderController.ActivateForm(0);
+        hiderController.ResetTimes();
     }
 }

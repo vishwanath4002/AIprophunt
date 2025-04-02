@@ -12,10 +12,12 @@ public class HiderController : MonoBehaviour
     [SerializeField] private int currentFormIndex = 0; // Tracks the current form
     [SerializeField] private float transformCooldown = 5f;
     [SerializeField] private float transformDuration = 10f; // Time before reverting
-    private float lastTransformTime = -Mathf.Infinity;
+    private float lastTransformEndTime = -Mathf.Infinity;
+    private float transformStartTime = -Mathf.Infinity;
 
-    [Header("References")]
-
+    [Header("Telemetry")]
+    [SerializeField] private float transformationDurationDebug;
+    [SerializeField] private float transformationCoolDownDebug;
 
     private Transform[] formObjects;
     private Coroutine revertCoroutine;
@@ -28,7 +30,10 @@ public class HiderController : MonoBehaviour
 
     void Start()
     {
+        transformationCoolDownDebug = 0f;
+        transformationDurationDebug = 0f;
         lastRotation = transform.rotation;
+
         // Store all child objects (forms)
         int childCount = transform.childCount - 2;
         formObjects = new Transform[childCount];
@@ -70,22 +75,29 @@ public class HiderController : MonoBehaviour
 
     public void TransformHider(int formIndex)
     {
-        if (Time.time - lastTransformTime < transformCooldown || formIndex == currentFormIndex)
+        if (transformationCoolDownDebug > 0f || transformationDurationDebug > 0f || formIndex == currentFormIndex)
             return;
-
-        if (formIndex >= 0 && formIndex < formObjects.Length)
+        if (formIndex == 0)
         {
+            ActivateForm(0);
+            transformStartTime = -Mathf.Infinity;
+            transformationDurationDebug = 0;
+            lastTransformEndTime = Time.time;
+            return;
+        }
+        if (formIndex > 0 && formIndex < formObjects.Length)
+        {
+            transformStartTime = Time.time;
             ActivateForm(formIndex);
-            lastTransformTime = Time.time;
+            transformationCoolDownDebug = 0f;
+            
 
             // Start revert timer if transformed into another form
-            if (formIndex != 0)
-            {
-                if (revertCoroutine != null)
-                    StopCoroutine(revertCoroutine);
+            if (revertCoroutine != null)
+                StopCoroutine(revertCoroutine);
 
-                revertCoroutine = StartCoroutine(RevertToOriginalAfterDelay(transformDuration));
-            }
+            revertCoroutine = StartCoroutine(RevertToOriginalAfterDelay());
+            lastTransformEndTime = Time.time;
         }
     }
 
@@ -98,15 +110,16 @@ public class HiderController : MonoBehaviour
         currentFormIndex = formIndex;
     }
 
-    private IEnumerator RevertToOriginalAfterDelay(float delay)
+    private IEnumerator RevertToOriginalAfterDelay()
     {
-        yield return new WaitForSeconds(delay);
+        yield return new WaitForSeconds(transformDuration);
         TransformHider(0); // Revert back to original form
     }
 
     public float GetTransformCooldownRemaining()
     {
-        return Mathf.Max(0, transformCooldown - (Time.time - lastTransformTime));
+        transformationCoolDownDebug = Mathf.Max(0, transformCooldown - (Time.time - lastTransformEndTime));
+        return Mathf.Max(0, transformCooldown - (Time.time - lastTransformEndTime));
     }
 
     public int GetCurrentFormIndex()
@@ -117,7 +130,8 @@ public class HiderController : MonoBehaviour
     public float GetCurrentTransformationDurationRemaining()
     {
         if (currentFormIndex == 0) return 0f; // Not transformed
-        return Mathf.Max(0, transformCooldown - (Time.time - lastTransformTime));
+        transformationDurationDebug = Mathf.Max(0, transformDuration - (Time.time - transformStartTime));
+        return Mathf.Max(0, transformDuration - (Time.time - transformStartTime));
     }
 
     // Getter for velocity so RaycastSensor can read it
@@ -129,5 +143,13 @@ public class HiderController : MonoBehaviour
     public Vector3 GetAngularVelocity()
     {
         return angularVelocity;
+    }
+
+    public void ResetTimes()
+    {
+        transformationCoolDownDebug = 0f;
+        transformationDurationDebug = 0f;
+        lastTransformEndTime = -Mathf.Infinity;
+        transformStartTime = -Mathf.Infinity;
     }
 }
