@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
         if (timer <= 0)
         {
             Debug.Log("Hider won. Restarting round.");
+            hiderAgent.AddReward(10f);
             hiderAgent.EndEpisode();
             EndRound();
         }

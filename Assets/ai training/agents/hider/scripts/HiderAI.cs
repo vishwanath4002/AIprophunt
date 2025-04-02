@@ -99,7 +99,7 @@ public class HiderAI : Agent
         seekerDistance = raycastSensor.GetSeekerDistance();
 
         //  Reward survival
-        AddReward(0.01f); // Small positive reward per step
+        AddReward(0.05f); // Small positive reward per step
 
         //  Reward transformation if it helps
         if (transformIndex != 0)
@@ -134,17 +134,17 @@ public class HiderAI : Agent
             AddReward(-0.5f);
         }
 
-        if (transformIndex == 0)
-        {
-            if (hiderController.GetAngularVelocity().sqrMagnitude == 0f)
-            {
-                AddReward(-0.5f);
-            }
-            if (hiderController.GetVelocity().sqrMagnitude == 0f)
-            {
-                AddReward(-0.5f);
-            }
-        }
+        //if (transformIndex == 0)
+        //{
+        //    if (hiderController.GetAngularVelocity().sqrMagnitude == 0f)
+        //    {
+        //        AddReward(-0.5f);
+        //    }
+        //    if (hiderController.GetVelocity().sqrMagnitude == 0f)
+        //    {
+        //        AddReward(-0.5f);
+        //    }
+        //}
     }
 
 
