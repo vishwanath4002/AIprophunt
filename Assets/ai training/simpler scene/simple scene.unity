@@ -537,7 +537,7 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 3000
+  MaxStep: 6000
   hiderController: {fileID: 15450016}
   raycastSensor: {fileID: 1388080084}
   detectablePropTags:
@@ -836,7 +836,7 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 3000
+  MaxStep: 66000
   hiderController: {fileID: 16960493}
   raycastSensor: {fileID: 1052468370}
   detectablePropTags:
@@ -1181,7 +1181,7 @@ MonoBehaviour:
   - {fileID: 526321239}
   - {fileID: 891449241}
   - {fileID: 823628142}
-  roundDuration: 20
+  roundDuration: 40
   timer: 0
   caught: 0
 --- !u!4 &30397547
@@ -3690,7 +3690,7 @@ MonoBehaviour:
   - {fileID: 1842372909}
   - {fileID: 164386829}
   - {fileID: 383408742}
-  roundDuration: 20
+  roundDuration: 40
   timer: 0
   caught: 0
 --- !u!4 &236417215
@@ -4923,7 +4923,7 @@ MonoBehaviour:
   - {fileID: 1234529711}
   - {fileID: 369594972}
   - {fileID: 143210767}
-  roundDuration: 20
+  roundDuration: 40
   timer: 0
   caught: 0
 --- !u!4 &293505118
@@ -7704,7 +7704,7 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 3000
+  MaxStep: 6000
   hiderController: {fileID: 419844311}
   raycastSensor: {fileID: 1575255122}
   detectablePropTags:
@@ -11876,7 +11876,7 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 3000
+  MaxStep: 6000
   hiderController: {fileID: 580441006}
   raycastSensor: {fileID: 924319503}
   detectablePropTags:
@@ -12726,7 +12726,7 @@ MonoBehaviour:
   - {fileID: 1088400401}
   - {fileID: 2104302385}
   - {fileID: 1315661446}
-  roundDuration: 20
+  roundDuration: 40
   timer: 0
   caught: 0
 --- !u!4 &608652032
@@ -17224,7 +17224,7 @@ MonoBehaviour:
   - {fileID: 618148283}
   - {fileID: 664657414}
   - {fileID: 1120178794}
-  roundDuration: 20
+  roundDuration: 40
   timer: 0
   caught: 0
 --- !u!4 &805995079
@@ -21519,7 +21519,7 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 3000
+  MaxStep: 6000
   hiderController: {fileID: 1000620224}
   raycastSensor: {fileID: 1476469972}
   detectablePropTags:
@@ -30123,7 +30123,7 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 3000
+  MaxStep: 6000
   hiderController: {fileID: 1435509356}
   raycastSensor: {fileID: 1403597221}
   detectablePropTags:
@@ -35190,7 +35190,7 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 3000
+  MaxStep: 6000
   hiderController: {fileID: 1679289190}
   raycastSensor: {fileID: 1419896624}
   detectablePropTags:
@@ -35648,7 +35648,7 @@ MonoBehaviour:
   - {fileID: 1486704483}
   - {fileID: 375091574}
   - {fileID: 374964092}
-  roundDuration: 20
+  roundDuration: 40
   timer: 0
   caught: 0
 --- !u!1 &1693290908
@@ -39161,7 +39161,7 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 3000
+  MaxStep: 6000
   hiderController: {fileID: 1813268178}
   raycastSensor: {fileID: 614909505}
   detectablePropTags:
@@ -39991,7 +39991,7 @@ MonoBehaviour:
   - {fileID: 946777745}
   - {fileID: 2090721064}
   - {fileID: 1228594214}
-  roundDuration: 20
+  roundDuration: 40
   timer: 0
   caught: 0
 --- !u!4 &1845307792
@@ -42919,7 +42919,7 @@ MonoBehaviour:
   - {fileID: 1991881650}
   - {fileID: 1359106184}
   - {fileID: 781297057}
-  roundDuration: 20
+  roundDuration: 40
   timer: 0
   caught: 0
 --- !u!4 &2004392363
