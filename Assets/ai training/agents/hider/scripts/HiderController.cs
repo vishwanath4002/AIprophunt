@@ -37,7 +37,7 @@ public class HiderController : MonoBehaviour
         lastRotation = transform.rotation;
 
         // Store all child objects (forms)
-        int childCount = transform.childCount - 2;
+        int childCount = transform.childCount - 1;
         formObjects = new Transform[childCount];
         for (int i = 0; i < childCount; i++)
         {

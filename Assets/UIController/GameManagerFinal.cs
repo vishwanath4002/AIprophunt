@@ -15,12 +15,10 @@ public class GameManagerFinal : MonoBehaviour
 
     private float timer;
     private bool caught;
-    private Rigidbody hiderRigidbody;
     private bool isFrozen = false;
 
     private void Start()
     {
-        hiderRigidbody = hiderAgent.GetComponent<Rigidbody>();
         uiController.OnRestartGame += RestartRound; // Listen for restart button
         StartNewRound();
     }
@@ -94,13 +92,13 @@ public class GameManagerFinal : MonoBehaviour
     public void FreezeAgent()
     {
         isFrozen = true;
-        hiderRigidbody.Sleep();
+        hiderAgent.enabled = false; // Disables the agent (stops decision-making)
     }
 
     public void UnfreezeAgent()
     {
         isFrozen = false;
-        hiderRigidbody.WakeUp();
+        hiderAgent.enabled = true; // Enables the agent (resumes decision-making)
     }
 
     private IEnumerator StartCountdown()
