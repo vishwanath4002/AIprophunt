@@ -14,7 +14,8 @@ public class PlayerFeatures : MonoBehaviour
     {
         if (collision.transform.parent != null && collision.transform.parent.name == "Hider")
         {
-            Destroy(collision.transform.parent.gameObject);
+            //Destroy(collision.transform.parent.gameObject);
+            collision.transform.parent.gameObject.SetActive(false);
             gameManager.HiderCaught();
         }
     }

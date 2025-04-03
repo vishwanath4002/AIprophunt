@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
@@ -10,6 +11,7 @@ public class UIController : MonoBehaviour
     public TMPro.TMP_Text scoreText;
     public GameObject pauseMenu;
     public GameObject endScreen;
+    public GameObject gameUI;
     public TMPro.TMP_Text endMessage;
     public TMPro.TMP_Text timeTakenText;
     public Button resumeButton;
@@ -41,7 +43,7 @@ public class UIController : MonoBehaviour
     }
     public void UpdateTimer(float time)
     {
-        timerText.text = "Time: " + Mathf.Ceil(time);
+        timerText.text = "Time: " + time;
     }
 
     public void UpdateScore(int caught, int total)
@@ -52,9 +54,10 @@ public class UIController : MonoBehaviour
     public void ShowEndScreen(bool won, float timeTaken)
     {
         endScreen.SetActive(true);
+        gameUI.SetActive(false);
         restartButton.onClick.AddListener(() => Restart());
         endScreenExitToMenuButton.onClick.AddListener(() => ExitToMenu());
-
+        
         endMessage.text = won ? "You Win!" : "Game Over!";
         timeTakenText.text = "Time Taken: " + timeTaken.ToString("F1") + "s";
     }
@@ -80,12 +83,14 @@ public class UIController : MonoBehaviour
             Cursor.lockState = CursorLockMode.None; // Show cursor
             Cursor.visible = true;
             gameManagerFinal.gamePaused = true;
+            gameUI.SetActive(false);
             resumeButton.onClick.AddListener(() => TogglePauseMenu());
             pauseMenuExitToMenuButton.onClick.AddListener(() => ExitToMenu());
         }
         else
         {
             gameManagerFinal.gamePaused = false;
+            gameUI.SetActive(true);
             Cursor.lockState = CursorLockMode.Locked; // Hide cursor
             Cursor.visible = false;
 

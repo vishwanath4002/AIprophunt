@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class GameManagerFinal : MonoBehaviour
 {
     public Transform player;
-    private GameObject hiderAI;
+    public GameObject hiderAI;
     public Transform[] spawnPoints;
     public UIController uiController;
     public float roundDuration = 60f;
@@ -29,6 +29,7 @@ public class GameManagerFinal : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
+        uiController.gameUI.SetActive(true);
         totalHiders = PlayerPrefs.GetInt("HiderCount", 1);
         SpawnPlayerAndHiders();
         FreezeAgents(); // Freeze player and hiders at the start
@@ -72,6 +73,7 @@ public class GameManagerFinal : MonoBehaviour
     {
         gamePaused = true;
         onMenu = true;
+        uiController.gameUI.SetActive(false);
         FreezeAgents(); // Freeze movement on game over
         uiController.ShowEndScreen(won, roundDuration - timer);
 
@@ -81,6 +83,7 @@ public class GameManagerFinal : MonoBehaviour
 
     private IEnumerator StartCountdown()
     {
+        uiController.gameUI.SetActive(true);
         uiController.UpdateCountdown("3");
         yield return new WaitForSeconds(1f);
         uiController.UpdateCountdown("2");
@@ -112,6 +115,7 @@ public class GameManagerFinal : MonoBehaviour
         {
             //hider.GetComponent<HiderController>().enabled = false;
             //hider.GetComponent<HiderAI>().enabled = false;
+            Debug.Log(hider);
             hider.SetActive(false);
         }
     }
@@ -130,6 +134,7 @@ public class GameManagerFinal : MonoBehaviour
         {
             //hider.GetComponent<HiderController>().enabled = true;
             //hider.GetComponent<HiderAI>().enabled = true;
+            Debug.Log(hider);
             hider.SetActive(true);
         }
     }
