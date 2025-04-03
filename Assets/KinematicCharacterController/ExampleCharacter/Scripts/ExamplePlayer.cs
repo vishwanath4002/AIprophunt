@@ -8,6 +8,7 @@ namespace KinematicCharacterController.Examples
 {
     public class ExamplePlayer : MonoBehaviour
     {
+        public GameManagerFinal gameManagerFinal;
         public ExampleCharacterController Character;
         public ExampleCharacterCamera CharacterCamera;
 
@@ -19,7 +20,7 @@ namespace KinematicCharacterController.Examples
 
         private void Start()
         {
-            Cursor.lockState = CursorLockMode.Locked;
+            //Cursor.lockState = CursorLockMode.Locked;
 
             // Tell camera to follow transform
             CharacterCamera.SetFollowTransform(Character.CameraFollowPoint);
@@ -31,7 +32,7 @@ namespace KinematicCharacterController.Examples
 
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && gameManagerFinal.gamePaused != true )
             {
                 Cursor.lockState = CursorLockMode.Locked;
             }

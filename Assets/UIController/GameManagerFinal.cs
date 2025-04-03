@@ -1,118 +1,136 @@
 using System.Collections;
-using System.Collections.Generic;
+using KinematicCharacterController.Examples;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManagerFinal : MonoBehaviour
 {
-    [Header("References")]
-    [SerializeField] private HiderAI hiderAgent;
-    [SerializeField] private Transform player;
-    [SerializeField] private Transform[] spawnPoints;
-    [SerializeField] private UIController uiController;
-
-    [Header("Game Settings")]
-    [SerializeField] private float roundDuration = 60f;
+    public Transform player;
+    private GameObject hiderAI;
+    public Transform[] spawnPoints;
+    public UIController uiController;
+    public float roundDuration = 60f;
 
     private float timer;
-    private bool caught;
-    private bool isFrozen = false;
+    private int hidersCaught = 0;
+    private int totalHiders;
+    public bool gamePaused = true; // Start with game paused
+    public bool onMenu = true;
 
     private void Start()
     {
-        uiController.OnRestartGame += RestartRound; // Listen for restart button
-        StartNewRound();
+        gamePaused = true;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+    public void StartGameplay()
+    {
+        onMenu = false;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        totalHiders = PlayerPrefs.GetInt("HiderCount", 1);
+        SpawnPlayerAndHiders();
+        FreezeAgents(); // Freeze player and hiders at the start
+        StartCoroutine(StartCountdown());
     }
 
     private void Update()
     {
-        if (!isFrozen)
+        if (gamePaused) return; // Stop everything if the game is paused
+
+        if (timer > 0)
         {
             timer -= Time.deltaTime;
             uiController.UpdateTimer(timer);
 
-            if (caught)
-            {
-                EndGame("You Lose!", false);
-            }
-            else if (timer <= 0)
-            {
-                EndGame("You Win!", true);
-            }
+            if (timer <= 0)
+                EndGame(false);
         }
     }
 
-    public void OnHiderCaught()
+    void SpawnPlayerAndHiders()
     {
-        caught = true;
-    }
+        player.position = spawnPoints[0].position; // Player spawns at first position
 
-    private void RestartRound()
-    {
-        uiController.HideResult();
-        ResetPositions();
-        StartNewRound();
-    }
-
-    private void StartNewRound()
-    {
-        caught = false;
-        timer = roundDuration;
-        ResetPositions();
-        StartCoroutine(StartCountdown());
-    }
-
-    private void EndGame(string message, bool won)
-    {
-        uiController.ShowResult(message, won);
-        FreezeAgent();
-    }
-
-    private void ResetPositions()
-    {
-        if (spawnPoints.Length < 2)
+        for (int i = 1; i < totalHiders; i++)
         {
-            Debug.LogError("Not enough spawn points! At least 2 required.");
-            return;
+            Instantiate(hiderAI, spawnPoints[i].position, Quaternion.identity);
         }
-
-        List<int> availableIndices = new List<int>();
-        for (int i = 0; i < spawnPoints.Length; i++)
-        {
-            availableIndices.Add(i);
-        }
-
-        int hiderSpawnIndex = Random.Range(0, availableIndices.Count);
-        hiderAgent.transform.position = spawnPoints[availableIndices[hiderSpawnIndex]].position;
-        availableIndices.RemoveAt(hiderSpawnIndex);
-
-        int playerSpawnIndex = Random.Range(0, availableIndices.Count);
-        player.transform.position = spawnPoints[availableIndices[playerSpawnIndex]].position;
     }
 
-    public void FreezeAgent()
+    public void HiderCaught()
     {
-        isFrozen = true;
-        hiderAgent.enabled = false; // Disables the agent (stops decision-making)
+        hidersCaught++;
+        uiController.UpdateScore(hidersCaught, totalHiders);
+
+        if (hidersCaught == totalHiders)
+            EndGame(true);
     }
 
-    public void UnfreezeAgent()
+    void EndGame(bool won)
     {
-        isFrozen = false;
-        hiderAgent.enabled = true; // Enables the agent (resumes decision-making)
+        gamePaused = true;
+        onMenu = true;
+        FreezeAgents(); // Freeze movement on game over
+        uiController.ShowEndScreen(won, roundDuration - timer);
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     private IEnumerator StartCountdown()
     {
-        FreezeAgent();
         uiController.UpdateCountdown("3");
         yield return new WaitForSeconds(1f);
         uiController.UpdateCountdown("2");
         yield return new WaitForSeconds(1f);
         uiController.UpdateCountdown("1");
         yield return new WaitForSeconds(1f);
-        uiController.UpdateCountdown("Go!", true);
+        uiController.UpdateCountdown("Go!");
         yield return new WaitForSeconds(1f);
         uiController.HideCountdown();
-        UnfreezeAgent();
+
+        gamePaused = false;
+        UnfreezeAgents();
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    private void FreezeAgents()
+    {
+        gamePaused = true;
+
+        // Disable player movement script
+        player.gameObject.SetActive(false);
+        player.GetComponent<ExamplePlayer>().enabled = false;
+        player.GetComponent<ExampleCharacterController>().enabled = false;
+
+        // Disable hider AI scripts
+        foreach (GameObject hider in GameObject.FindGameObjectsWithTag("Hider"))
+        {
+            //hider.GetComponent<HiderController>().enabled = false;
+            //hider.GetComponent<HiderAI>().enabled = false;
+            hider.SetActive(false);
+        }
+    }
+
+    private void UnfreezeAgents()
+    {
+        gamePaused = false;
+
+        // Enable player movement script
+        player.gameObject.SetActive(true);
+        player.GetComponent<ExamplePlayer>().enabled = true;
+        player.GetComponent<ExampleCharacterController>().enabled = true;
+
+        // Enable hider AI scripts
+        foreach (GameObject hider in GameObject.FindGameObjectsWithTag("Hider"))
+        {
+            //hider.GetComponent<HiderController>().enabled = true;
+            //hider.GetComponent<HiderAI>().enabled = true;
+            hider.SetActive(true);
+        }
     }
 }

@@ -15,6 +15,7 @@ TagManager:
   - hider
   - seeker
   - raycastsensor
+  - Hider
   layers:
   - Default
   - TransparentFX
