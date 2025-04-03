@@ -132,12 +132,6 @@ public class HiderAI : Agent
             AddReward(-0.2f);
         }
 
-        //  Penalize being caught
-
-        //if (transformIndex !=0 && hiderController.GetAngularVelocity().sqrMagnitude > 0f && hiderController.GetVelocity().sqrMagnitude > 0f)
-        //{
-        //    AddReward(-0.5f);
-        //}
 
         if (transformIndex == 0)
         {
