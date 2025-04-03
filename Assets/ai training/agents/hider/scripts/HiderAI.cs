@@ -80,11 +80,11 @@ public class HiderAI : Agent
         foreach (var propTag in detectablePropTags)
         {
             sensor.AddObservation(propTypeCount[propTag]);
-            sensor.AddObservation(minDistances[propTag]);
+            sensor.AddObservation(minDistances[propTag] == float.MaxValue ? raycastSensor.raycastLength : minDistances[propTag]);
         }
 
         // 4. Seeker distance 
-        sensor.AddObservation(seekerDistance);
+        sensor.AddObservation(seekerDistance == float.MaxValue ? raycastSensor.raycastLength : seekerDistance);
 
         // 5. Current form index
         currentFormIndex = hiderController.GetCurrentFormIndex();
@@ -165,9 +165,8 @@ public class HiderAI : Agent
     {
         if (collision.gameObject.CompareTag("Seeker"))
         {
-            AddReward(-1f); // Penalize for getting caught
+            AddReward(-4000f); // Penalize for getting caught
             EndEpisode(); // Reset the episode
         }
     }
-
 }
