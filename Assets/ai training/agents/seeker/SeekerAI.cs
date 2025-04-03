@@ -11,7 +11,7 @@ public class SeekerAI : MonoBehaviour
     [Header("References")]
     public NavMeshAgent agent;
     public RaycastSensor raycastSensor;
-    public GameManager gameManager;
+    public TrainingGameManager gameManager;
     
     private string hiderTag = "hider";
 

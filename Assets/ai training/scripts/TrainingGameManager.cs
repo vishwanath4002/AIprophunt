@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class TrainingGameManager : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private HiderAI hiderAgent;
@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float timer;
 
     public bool caught;
+    public bool won;
 
     private void Start()
     {
@@ -30,15 +31,12 @@ public class GameManager : MonoBehaviour
         if (timer <= 0)
         {
             Debug.Log("Hider won. Restarting round.");
-            hiderAgent.AddReward(100f);
-            hiderAgent.EndEpisode();
+            won = true;
             EndRound();
         }
         if (caught)
         {
             Debug.Log("Seeker won. Restarting round.");
-            hiderAgent.AddReward(-50f);
-            hiderAgent.EndEpisode();
             EndRound();
         }
     }
@@ -59,6 +57,7 @@ public class GameManager : MonoBehaviour
     private void StartNewRound()
     {
         caught = false;
+        won = false;
         timer = roundDuration;
         ResetPositions();
     }

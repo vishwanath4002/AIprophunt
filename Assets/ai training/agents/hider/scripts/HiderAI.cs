@@ -14,23 +14,29 @@ public class HiderAI : Agent
     [SerializeField] private List<string> detectablePropTags;
     [SerializeField] private string seekerTag;
 
+    [Header("Round duration")]
+    [SerializeField] private float roundTime = 40;
     [Header("Debug Info")]
     [SerializeField] private int currentFormIndex; // To track current form in Inspector
+    
     private float seekerDistance;
+    private float episodeStartTime;
 
     public override void OnEpisodeBegin()
     {
         Reset();
+        episodeStartTime = Time.time;
         SetReward(0);
         seekerDistance = raycastSensor.GetSeekerDistance();
     }
 
     private void FixedUpdate()
     {
-        if (hiderController.CheckCaught()) // Continuously check if caught
+        // Check if round time is up and Hider is still alive
+        if (Time.time - episodeStartTime >= roundTime)
         {
-            AddReward(-15.0f);  // Penalize for getting caught
-            EndEpisode();       // End training episode
+            AddReward(50f);
+            EndEpisode();
         }
     }
 
@@ -74,11 +80,11 @@ public class HiderAI : Agent
         foreach (var propTag in detectablePropTags)
         {
             sensor.AddObservation(propTypeCount[propTag]);
-            sensor.AddObservation(minDistances[propTag] == float.MaxValue ? raycastSensor.raycastLength : minDistances[propTag]);
+            sensor.AddObservation(minDistances[propTag]);
         }
 
-        // 4. Seeker distance (discrete)
-        sensor.AddObservation(seekerDistance == float.MaxValue ? raycastSensor.raycastLength : seekerDistance);
+        // 4. Seeker distance 
+        sensor.AddObservation(seekerDistance);
 
         // 5. Current form index
         currentFormIndex = hiderController.GetCurrentFormIndex();
@@ -114,19 +120,11 @@ public class HiderAI : Agent
         {
             if (seekerDistance > previousSeekerDistance) // If transformation helps avoid seeker
             {
-                AddReward(1f);
+                AddReward(5f);
             }
-            else
+            if ((hiderController.GetAngularVelocity().sqrMagnitude > 0f || hiderController.GetVelocity().sqrMagnitude > 0f) && previousSeekerDistance > seekerDistance)
             {
-                if (hiderController.GetAngularVelocity().sqrMagnitude == 0f)
-                {
-                    AddReward(-0.5f);
-                }
-                if (hiderController.GetVelocity().sqrMagnitude == 0f)
-                {
-                    AddReward(-0.5f);
-                }
-                AddReward(-0.1f); // Penalize unnecessary transformations
+                AddReward(-0.5f);
             }
         }
         else
@@ -136,22 +134,22 @@ public class HiderAI : Agent
 
         //  Penalize being caught
 
-        if (transformIndex !=0 && hiderController.GetAngularVelocity().sqrMagnitude > 0f && hiderController.GetVelocity().sqrMagnitude > 0f)
-        {
-            AddReward(-0.5f);
-        }
-
-        //if (transformIndex == 0)
+        //if (transformIndex !=0 && hiderController.GetAngularVelocity().sqrMagnitude > 0f && hiderController.GetVelocity().sqrMagnitude > 0f)
         //{
-        //    if (hiderController.GetAngularVelocity().sqrMagnitude == 0f)
-        //    {
-        //        AddReward(-0.5f);
-        //    }
-        //    if (hiderController.GetVelocity().sqrMagnitude == 0f)
-        //    {
-        //        AddReward(-0.5f);
-        //    }
+        //    AddReward(-0.5f);
         //}
+
+        if (transformIndex == 0)
+        {
+            if (hiderController.GetAngularVelocity().sqrMagnitude == 0f)
+            {
+                AddReward(-0.5f);
+            }
+            if (hiderController.GetVelocity().sqrMagnitude == 0f)
+            {
+                AddReward(-0.5f);
+            }
+        }
     }
 
 
@@ -168,4 +166,14 @@ public class HiderAI : Agent
         hiderController.ActivateForm(0);
         hiderController.ResetTimes();
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Seeker"))
+        {
+            AddReward(-1f); // Penalize for getting caught
+            EndEpisode(); // Reset the episode
+        }
+    }
+
 }

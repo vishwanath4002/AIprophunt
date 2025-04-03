@@ -5,7 +5,6 @@ using UnityEngine.AI;
 public class HiderController : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private GameManager gameManager;
 
     [Header("Movement Settings")]
     [SerializeField] public float moveSpeed = 3f;
@@ -154,10 +153,6 @@ public class HiderController : MonoBehaviour
         return angularVelocity;
     }
 
-    public bool CheckCaught()
-    {
-        return gameManager.caught;
-    }
     public void ResetTimes()
     {
         transformationCoolDownDebug = 0f;
