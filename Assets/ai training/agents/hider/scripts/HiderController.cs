@@ -36,16 +36,26 @@ public class HiderController : MonoBehaviour
         transformationDurationDebug = 0f;
         lastRotation = transform.rotation;
 
-        // Store all child objects (forms)
-        int childCount = transform.childCount - 1;
+        int childCount = transform.childCount; // Do not subtract 1, ensure all children are counted
         formObjects = new Transform[childCount];
+
         for (int i = 0; i < childCount; i++)
         {
             formObjects[i] = transform.GetChild(i);
+            if (formObjects[i] == null)
+            {
+                Debug.LogError($"HiderController: Child object at index {i} is NULL!");
+            }
+        }
+
+        if (formObjects.Length == 0)
+        {
+            Debug.LogError("HiderController: No form objects found! Check prefab structure.");
         }
 
         ActivateForm(currentFormIndex);
     }
+
 
     private void Update()
     {

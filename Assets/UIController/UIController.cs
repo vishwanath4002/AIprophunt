@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem.XR;
 using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
@@ -20,30 +19,36 @@ public class UIController : MonoBehaviour
     public Button restartButton;
 
     private bool paused;
+
     private void Start()
     {
         paused = false;
+        resumeButton.onClick.AddListener(TogglePauseMenu);
+        pauseMenuExitToMenuButton.onClick.AddListener(ExitToMenu);
+        restartButton.onClick.AddListener(Restart);
+        endScreenExitToMenuButton.onClick.AddListener(ExitToMenu);
     }
 
     public void ExitToMenu()
     {
         endScreen.SetActive(false);
         pauseMenu.SetActive(false);
-        Cursor.lockState = CursorLockMode.Locked; // Hide cursor
-        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         mainMenuController.GoBackToMainMenu();
     }
 
     public void Restart()
     {
         endScreen.SetActive(false);
-        Cursor.lockState = CursorLockMode.Locked; // Hide cursor
+        Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         gameManagerFinal.StartGameplay();
     }
+
     public void UpdateTimer(float time)
     {
-        timerText.text = "Time: " + time;
+        timerText.text = "Time: " + Mathf.Max(0, time).ToString("F1");
     }
 
     public void UpdateScore(int caught, int total)
@@ -55,9 +60,6 @@ public class UIController : MonoBehaviour
     {
         endScreen.SetActive(true);
         gameUI.SetActive(false);
-        restartButton.onClick.AddListener(() => Restart());
-        endScreenExitToMenuButton.onClick.AddListener(() => ExitToMenu());
-        
         endMessage.text = won ? "You Win!" : "Game Over!";
         timeTakenText.text = "Time Taken: " + timeTaken.ToString("F1") + "s";
     }
@@ -80,20 +82,17 @@ public class UIController : MonoBehaviour
 
         if (paused)
         {
-            Cursor.lockState = CursorLockMode.None; // Show cursor
+            Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
             gameManagerFinal.gamePaused = true;
             gameUI.SetActive(false);
-            resumeButton.onClick.AddListener(() => TogglePauseMenu());
-            pauseMenuExitToMenuButton.onClick.AddListener(() => ExitToMenu());
         }
         else
         {
             gameManagerFinal.gamePaused = false;
             gameUI.SetActive(true);
-            Cursor.lockState = CursorLockMode.Locked; // Hide cursor
+            Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
-
         }
     }
 }
