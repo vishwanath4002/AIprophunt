@@ -112,15 +112,25 @@ public class GameManagerFinal : MonoBehaviour
     private IEnumerator StartCountdown()
     {
         countdownText.gameObject.SetActive(true); // Show countdown UI
-
+        player.gameObject.SetActive(true);
         countdownText.text = "3";
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
+        countdownText.gameObject.SetActive(false);
+        yield return new WaitForSeconds(0.5f);
+        countdownText.gameObject.SetActive(true);
         countdownText.text = "2";
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
+        countdownText.gameObject.SetActive(false);
+        yield return new WaitForSeconds(0.5f);
+        countdownText.gameObject.SetActive(true);
         countdownText.text = "1";
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
+        countdownText.gameObject.SetActive(false);
+        yield return new WaitForSeconds(0.5f);
+        countdownText.gameObject.SetActive(true);
         countdownText.text = "Go!";
         yield return new WaitForSeconds(1f);
+
 
         countdownText.gameObject.SetActive(false); // Hide countdown after start
 

@@ -38,6 +38,8 @@ public class MainMenuController : MonoBehaviour
     public void OpenHiderSelection()
     {
         mainMenuPanel.SetActive(false);
+        Cursor.lockState = CursorLockMode.None; // Unlock cursor
+        Cursor.visible = true; // Show cursor
         gameManagerFinal.onMenu = true;
         hiderSelectionPanel.SetActive(true);
         startButton.onClick.AddListener(StartGame);
