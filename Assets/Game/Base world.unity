@@ -7843,8 +7843,11 @@ MonoBehaviour:
   uiController: {fileID: 802928211}
   roundDuration: 60
   countdownText: {fileID: 475273605}
+  countdownBeep: {fileID: 8300000, guid: 7921eaba910f52d4180c055e9cebc881, type: 3}
+  winSound: {fileID: 8300000, guid: 1b71bcccadb9617498c717c47a45df20, type: 3}
+  loseSound: {fileID: 8300000, guid: 2a28ada89567b624bb8b8d7084be48db, type: 3}
   gamePaused: 1
-  onMenu: 1
+  onMenu: 0
 --- !u!4 &802928213
 Transform:
   m_ObjectHideFlags: 0

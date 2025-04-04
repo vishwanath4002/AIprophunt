@@ -8,6 +8,7 @@ public class PlayerFeatures : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape) && gameManager.onMenu == false)
             gameManager.uiController.TogglePauseMenu();
+
     }
 
     private void OnCollisionEnter(Collision collision)

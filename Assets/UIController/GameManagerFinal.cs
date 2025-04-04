@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI; // Add this for UI elements
+using UnityEngine.UI;
 
 public class GameManagerFinal : MonoBehaviour
 {
@@ -11,7 +11,14 @@ public class GameManagerFinal : MonoBehaviour
     public UIController uiController;
     public float roundDuration = 60f;
 
-    public TMPro.TMP_Text countdownText; // Separate UI text for countdown
+    public TMPro.TMP_Text countdownText; // Countdown UI Text
+
+    // Audio Clips
+    public AudioClip countdownBeep;
+    public AudioClip winSound;
+    public AudioClip loseSound;
+
+    private AudioSource audioSource;
 
     private float timer;
     private int hidersCaught = 0;
@@ -21,11 +28,14 @@ public class GameManagerFinal : MonoBehaviour
 
     private void Start()
     {
+        FreezeAgents();
+        audioSource = GetComponent<AudioSource>();
+        if (!audioSource) audioSource = gameObject.AddComponent<AudioSource>();
+
         gamePaused = true;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        // Ensure countdown UI is hidden at the start
         countdownText.gameObject.SetActive(false);
     }
 
@@ -70,20 +80,18 @@ public class GameManagerFinal : MonoBehaviour
             return;
         }
 
-        // Move player to first spawn point
         player.position = spawnPoints[0].position;
 
-        // Position and enable only the selected number of hiders
         for (int i = 0; i < hiders.Length; i++)
         {
             if (i < totalHiders)
             {
                 hiders[i].transform.position = spawnPoints[i + 1].position;
-                hiders[i].SetActive(false); // Will be activated after countdown
+                hiders[i].SetActive(false);
             }
             else
             {
-                hiders[i].SetActive(false); // Ensure unused hiders stay disabled
+                hiders[i].SetActive(false);
             }
         }
     }
@@ -107,32 +115,38 @@ public class GameManagerFinal : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        //  Play win/lose sound
+        if (won && winSound) audioSource.PlayOneShot(winSound);
+        else if (!won && loseSound) audioSource.PlayOneShot(loseSound);
     }
 
     private IEnumerator StartCountdown()
     {
-        countdownText.gameObject.SetActive(true); // Show countdown UI
+        countdownText.gameObject.SetActive(true);
         player.gameObject.SetActive(true);
-        countdownText.text = "3";
-        yield return new WaitForSeconds(0.5f);
-        countdownText.gameObject.SetActive(false);
-        yield return new WaitForSeconds(0.5f);
-        countdownText.gameObject.SetActive(true);
-        countdownText.text = "2";
-        yield return new WaitForSeconds(0.5f);
-        countdownText.gameObject.SetActive(false);
-        yield return new WaitForSeconds(0.5f);
-        countdownText.gameObject.SetActive(true);
-        countdownText.text = "1";
-        yield return new WaitForSeconds(0.5f);
-        countdownText.gameObject.SetActive(false);
-        yield return new WaitForSeconds(0.5f);
-        countdownText.gameObject.SetActive(true);
-        countdownText.text = "Go!";
-        yield return new WaitForSeconds(1f);
+
+        string[] countdownSteps = { "3", "2", "1", "Go!" };
+
+        foreach (string step in countdownSteps)
+        {
+            countdownText.text = step;
+
+            //  Play countdown beep (except "Go!")
+            if (step != "Go!" && countdownBeep)
+            {
+                audioSource.PlayOneShot(countdownBeep);
+            }
 
 
-        countdownText.gameObject.SetActive(false); // Hide countdown after start
+            yield return new WaitForSeconds(step == "Go!" ? 1f : 0.5f);
+            countdownText.gameObject.SetActive(false);
+            yield return new WaitForSeconds(0.5f);
+            audioSource.Stop();
+            countdownText.gameObject.SetActive(true);
+        }
+
+        countdownText.gameObject.SetActive(false);
 
         gamePaused = false;
         UnfreezeAgents();
