@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI; // Add this for UI elements
 
 public class GameManagerFinal : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class GameManagerFinal : MonoBehaviour
     public Transform[] spawnPoints;
     public UIController uiController;
     public float roundDuration = 60f;
+
+    public TMPro.TMP_Text countdownText; // Separate UI text for countdown
 
     private float timer;
     private int hidersCaught = 0;
@@ -21,6 +24,9 @@ public class GameManagerFinal : MonoBehaviour
         gamePaused = true;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        // Ensure countdown UI is hidden at the start
+        countdownText.gameObject.SetActive(false);
     }
 
     public void StartGameplay()
@@ -105,17 +111,18 @@ public class GameManagerFinal : MonoBehaviour
 
     private IEnumerator StartCountdown()
     {
-        uiController.gameUI.SetActive(true);
-        uiController.HideCountdown();
-        uiController.UpdateCountdown("3");
+        countdownText.gameObject.SetActive(true); // Show countdown UI
+
+        countdownText.text = "3";
         yield return new WaitForSeconds(1f);
-        uiController.UpdateCountdown("2");
+        countdownText.text = "2";
         yield return new WaitForSeconds(1f);
-        uiController.UpdateCountdown("1");
+        countdownText.text = "1";
         yield return new WaitForSeconds(1f);
-        uiController.UpdateCountdown("Go!");
+        countdownText.text = "Go!";
         yield return new WaitForSeconds(1f);
-        uiController.HideCountdown();
+
+        countdownText.gameObject.SetActive(false); // Hide countdown after start
 
         gamePaused = false;
         UnfreezeAgents();

@@ -84,6 +84,7 @@ public class UIController : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            resumeButton.onClick.AddListener(TogglePauseMenu);
             gameManagerFinal.gamePaused = true;
             gameUI.SetActive(false);
         }
