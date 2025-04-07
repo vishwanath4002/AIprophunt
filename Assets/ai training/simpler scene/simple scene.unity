@@ -548,6 +548,7 @@ MonoBehaviour:
   - garbage bin
   - barrel
   seekerTag: seeker
+  roundTime: 30
   currentFormIndex: 0
 --- !u!114 &15450016
 MonoBehaviour:
@@ -561,7 +562,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f53f96a53e2818543b82e4b309183dd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 2004392362}
   moveSpeed: 3
   rotationSpeed: 120
   currentFormIndex: 0
@@ -847,6 +847,7 @@ MonoBehaviour:
   - garbage bin
   - barrel
   seekerTag: seeker
+  roundTime: 30
   currentFormIndex: 0
 --- !u!114 &16960493
 MonoBehaviour:
@@ -860,7 +861,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f53f96a53e2818543b82e4b309183dd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 608652031}
   moveSpeed: 3
   rotationSpeed: 120
   currentFormIndex: 0
@@ -1181,9 +1181,10 @@ MonoBehaviour:
   - {fileID: 526321239}
   - {fileID: 891449241}
   - {fileID: 823628142}
-  roundDuration: 40
+  roundDuration: 30
   timer: 0
   caught: 0
+  won: 0
 --- !u!4 &30397547
 Transform:
   m_ObjectHideFlags: 0
@@ -3690,9 +3691,10 @@ MonoBehaviour:
   - {fileID: 1842372909}
   - {fileID: 164386829}
   - {fileID: 383408742}
-  roundDuration: 40
+  roundDuration: 30
   timer: 0
   caught: 0
+  won: 0
 --- !u!4 &236417215
 Transform:
   m_ObjectHideFlags: 0
@@ -4923,9 +4925,10 @@ MonoBehaviour:
   - {fileID: 1234529711}
   - {fileID: 369594972}
   - {fileID: 143210767}
-  roundDuration: 40
+  roundDuration: 30
   timer: 0
   caught: 0
+  won: 0
 --- !u!4 &293505118
 Transform:
   m_ObjectHideFlags: 0
@@ -7715,6 +7718,7 @@ MonoBehaviour:
   - garbage bin
   - barrel
   seekerTag: seeker
+  roundTime: 30
   currentFormIndex: 0
 --- !u!114 &419844311
 MonoBehaviour:
@@ -7728,7 +7732,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f53f96a53e2818543b82e4b309183dd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 236417214}
   moveSpeed: 3
   rotationSpeed: 120
   currentFormIndex: 0
@@ -11887,6 +11890,7 @@ MonoBehaviour:
   - garbage bin
   - barrel
   seekerTag: seeker
+  roundTime: 30
   currentFormIndex: 0
 --- !u!114 &580441006
 MonoBehaviour:
@@ -11900,7 +11904,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f53f96a53e2818543b82e4b309183dd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 805995078}
   moveSpeed: 3
   rotationSpeed: 120
   currentFormIndex: 0
@@ -12726,9 +12729,10 @@ MonoBehaviour:
   - {fileID: 1088400401}
   - {fileID: 2104302385}
   - {fileID: 1315661446}
-  roundDuration: 40
+  roundDuration: 30
   timer: 0
   caught: 0
+  won: 0
 --- !u!4 &608652032
 Transform:
   m_ObjectHideFlags: 0
@@ -17224,9 +17228,10 @@ MonoBehaviour:
   - {fileID: 618148283}
   - {fileID: 664657414}
   - {fileID: 1120178794}
-  roundDuration: 40
+  roundDuration: 30
   timer: 0
   caught: 0
+  won: 0
 --- !u!4 &805995079
 Transform:
   m_ObjectHideFlags: 0
@@ -21530,6 +21535,7 @@ MonoBehaviour:
   - garbage bin
   - barrel
   seekerTag: seeker
+  roundTime: 30
   currentFormIndex: 0
 --- !u!114 &1000620224
 MonoBehaviour:
@@ -21543,7 +21549,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f53f96a53e2818543b82e4b309183dd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 30397546}
   moveSpeed: 3
   rotationSpeed: 120
   currentFormIndex: 0
@@ -30102,7 +30107,7 @@ MonoBehaviour:
     hasUpgradedBrainParametersWithActionSpec: 1
   m_Model: {fileID: 0}
   m_InferenceDevice: 1
-  m_BehaviorType: 0
+  m_BehaviorType: 2
   m_BehaviorName: HiderAI
   TeamId: 0
   m_UseChildSensors: 1
@@ -30134,6 +30139,7 @@ MonoBehaviour:
   - garbage bin
   - barrel
   seekerTag: seeker
+  roundTime: 30
   currentFormIndex: 0
 --- !u!195 &1435509355
 NavMeshAgent:
@@ -30169,7 +30175,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f53f96a53e2818543b82e4b309183dd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 1691238714}
   moveSpeed: 3
   rotationSpeed: 120
   currentFormIndex: 0
@@ -35201,6 +35206,7 @@ MonoBehaviour:
   - garbage bin
   - barrel
   seekerTag: seeker
+  roundTime: 30
   currentFormIndex: 0
 --- !u!114 &1679289190
 MonoBehaviour:
@@ -35214,7 +35220,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f53f96a53e2818543b82e4b309183dd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 293505117}
   moveSpeed: 3
   rotationSpeed: 120
   currentFormIndex: 0
@@ -35648,9 +35653,10 @@ MonoBehaviour:
   - {fileID: 1486704483}
   - {fileID: 375091574}
   - {fileID: 374964092}
-  roundDuration: 40
+  roundDuration: 30
   timer: 0
   caught: 0
+  won: 0
 --- !u!1 &1693290908
 GameObject:
   m_ObjectHideFlags: 0
@@ -39172,6 +39178,7 @@ MonoBehaviour:
   - garbage bin
   - barrel
   seekerTag: seeker
+  roundTime: 30
   currentFormIndex: 0
 --- !u!114 &1813268178
 MonoBehaviour:
@@ -39185,7 +39192,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f53f96a53e2818543b82e4b309183dd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 1845307791}
   moveSpeed: 3
   rotationSpeed: 120
   currentFormIndex: 0
@@ -39991,9 +39997,10 @@ MonoBehaviour:
   - {fileID: 946777745}
   - {fileID: 2090721064}
   - {fileID: 1228594214}
-  roundDuration: 40
+  roundDuration: 30
   timer: 0
   caught: 0
+  won: 0
 --- !u!4 &1845307792
 Transform:
   m_ObjectHideFlags: 0
@@ -42919,9 +42926,10 @@ MonoBehaviour:
   - {fileID: 1991881650}
   - {fileID: 1359106184}
   - {fileID: 781297057}
-  roundDuration: 40
+  roundDuration: 30
   timer: 0
   caught: 0
+  won: 0
 --- !u!4 &2004392363
 Transform:
   m_ObjectHideFlags: 0
